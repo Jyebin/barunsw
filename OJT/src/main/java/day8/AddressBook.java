@@ -109,7 +109,7 @@ public class AddressBook extends JPanel {
 
 		String[] columns = { "이름", "나이", "성별", "전화번호", "주소" };
 
-		DefaultTableModel tableModel = new DefaultTableModel(columns, 10);
+		DefaultTableModel tableModel = new DefaultTableModel(columns, 200);
 		tableModel.setColumnIdentifiers(columns);
 
 		jTable.setModel(tableModel);
