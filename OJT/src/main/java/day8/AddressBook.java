@@ -101,10 +101,10 @@ public class AddressBook extends JPanel {
 	    jPanel_Command.setLayout(new GridBagLayout());
 
 	    jPanel_Command.add(jButton_Add, new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0, GridBagConstraints.EAST,
-	            GridBagConstraints.VERTICAL, new Insets(0, 5, 0, 5), 0, 0));
+	            GridBagConstraints.VERTICAL, new Insets(0, 5, 0, 6), 0, 0));
 
 	    jPanel_Command.add(jButton_Change, new GridBagConstraints(1, 0, 1, 1, 0.0, 1.0, GridBagConstraints.EAST,
-	            GridBagConstraints.VERTICAL, new Insets(0, 5, 0, 5), 0, 0));
+	            GridBagConstraints.VERTICAL, new Insets(0, 5, 0, 6), 0, 0));
 
 	    this.setLayout(gridBagLayout);
 
