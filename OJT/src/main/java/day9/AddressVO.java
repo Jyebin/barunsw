@@ -1,16 +1,25 @@
-package day10;
+package day9;
 
-public class AddressVo {
-	// 이름, 나이, 성별, 전화번호, 주소
+import java.io.Serializable;
+
+public class AddressVO implements Serializable {
 	private int seq;
 	private String name;
 	private int age;
-	private Gender gender;
 	private String phone;
 	private String address;
+	private Gender gender;
+
+	public AddressVO() {
+
+	}
 
 	public int getSeq() {
 		return this.seq;
+	}
+
+	public void setSeq(int seq) {
+		this.seq = seq;
 	}
 
 	public String getName() {
@@ -25,16 +34,16 @@ public class AddressVo {
 		return this.age;
 	}
 
-	public void setAge(int age) {
-		this.age = age;
-	}
-
 	public Gender getGender() {
-		return this.gender;
+		return gender;
 	}
 
 	public void setGender(Gender gender) {
 		this.gender = gender;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
 	}
 
 	public String getPhone() {
@@ -55,8 +64,7 @@ public class AddressVo {
 
 	@Override
 	public String toString() {
-		return "seq=" + seq + ", name=" + name + ", age=" + age + ", gender=" + gender + ", phone=" + phone
-				+ ", address=" + address;
-
+		return "seq=" + seq + ", name=" + name + ", age=" + age + ", phone=" + phone + ", address=" + address;
 	}
+
 }

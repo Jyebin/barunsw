@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="AddressMapper">
+	<select id="selectAddressList" parameterType="AddressVO"
+		resultType="AddressVO">
+		SELECT * FROM address_book WHERE name = #{name}
+	</select>
+
+	<insert id="insertAddress" parameterType="AddressVO">
+		INSERT INTO
+		address_book (name, age, phone, address)
+		VALUES (#{name}, #{age},
+		#{phone}, #{address})
+	</insert>
+
+
+	<update id="updateAddress" parameterType="AddressVO">
+		UPDATE address_book
+		SET
+		name = #{name}, age = #{age}, phone = #{phone}, address = #{address}
+		WHERE seq = #{seq}
+	</update>
+
+	<delete id="deleteAddress" parameterType="int">
+		DELETE FROM
+		address_book WHERE seq = #{seq}
+	</delete>
+
+	<select id="getNextSequence" resultType="int">
+		SELECT
+		COALESCE(MAX(seq), 0) + 1 FROM address_book
+	</select>
+
+	<select id="getLastInsertedSeq" resultType="int">
+		SELECT
+		LAST_INSERT_ID()
+	</select>
+
+</mapper>

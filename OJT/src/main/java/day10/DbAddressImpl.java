@@ -51,10 +51,9 @@ public class DbAddressImpl implements AddressBookInterface {
 		try (Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
 				Statement stmt = conn.createStatement()) {
 
-			ResultSet resultSet = stmt.executeQuery("SELECT SEQ, NAME, AGE, GENDER, PHONE, ADDRESS, FROM USER_INFO");
+			ResultSet resultSet = stmt.executeQuery("SELECT NAME, AGE, GENDER, PHONE, ADDRESS, FROM USER_INFO");
 
 			while (resultSet.next()) {
-				String seq = resultSet.getString("SEQ");
 				String name = resultSet.getString("NAME");
 				int age = resultSet.getInt("AGE");
 				String genderStr = resultSet.getString("GENDER");
@@ -81,8 +80,9 @@ public class DbAddressImpl implements AddressBookInterface {
 	@Override
 	public int insertAddress(AddressVo addressVo) {
 		String sql = "INSERT INTO USER_INFO(NAME, AGE, GENDER, PHONE, ADDRESS)" + "VALUES(?, ?, ?, ?, ?)";
-
-		try (Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+		int insertCnt = 0;
+		try (
+				Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
 				PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setString(1, addressVo.getName());
 			pstmt.setInt(2, addressVo.getAge());
@@ -90,56 +90,57 @@ public class DbAddressImpl implements AddressBookInterface {
 			pstmt.setString(4, addressVo.getPhone());
 			pstmt.setString(5, addressVo.getAddress());
 
-			int insertCnt = pstmt.executeUpdate();
+			insertCnt = pstmt.executeUpdate();
 			if (insertCnt == 0) {
 				LOGGER.warn("insert된 행이 없음: " + addressVo.getName());
 			}
 			LOGGER.debug("insert된 행 수: " + insertCnt);
+
 		} catch (SQLException e) {
 			LOGGER.error("insert 도중 SQL 예외 발생: ", e);
-			return 1;
 		}
-		return 0;
+		return insertCnt;
 	}
 
 	public int updateAddress(AddressVo addressVo) {
-		String sql = "UPDATE USER_INFO SET AGE=?, PHONE=?, ADDRESS=? WHERE NAME=?";
+		String sql = "UPDATE USER_INFO SET AGE=?, GENDER = ?, PHONE=?, ADDRESS=? WHERE NAME=?";
+		int updateCnt = 0;
 		try (Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
 				PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setInt(1, addressVo.getAge());
-			pstmt.setString(2, addressVo.getPhone());
-			pstmt.setString(3, addressVo.getAddress());
-			pstmt.setString(4, addressVo.getName());
+			pstmt.setString(2, addressVo.getGender().toString());
+			pstmt.setString(3, addressVo.getPhone());
+			pstmt.setString(4, addressVo.getAddress());
+			pstmt.setString(5, addressVo.getName());
 
-			int updateCnt = pstmt.executeUpdate();
+			updateCnt = pstmt.executeUpdate();
 			if (updateCnt == 0) {
 				LOGGER.warn("update된 행이 없음: " + addressVo.getName());
 			}
 			LOGGER.debug("update된 행 수: " + updateCnt);
 		} catch (SQLException e) {
 			LOGGER.error("수정 도중 SQL 예외 발생: ", e);
-			return 1;
 		}
-		return 0;
+		return updateCnt;
 	}
 
 	public int deleteAddress(AddressVo addressVo) {
 		String sql = "DELETE FROM USER_INFO WHERE NAME=?";
+		int deleteCnt = 0;
 		try (Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
 				PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
 			pstmt.setString(1, addressVo.getName());
 
-			int deleteCnt = pstmt.executeUpdate();
+			deleteCnt = pstmt.executeUpdate();
 			if (deleteCnt == 0) {
 				LOGGER.warn("delete된 행이 없음: " + addressVo.getName());
 			}
 			LOGGER.debug("delete된 행 수: " + deleteCnt);
 		} catch (SQLException e) {
 			LOGGER.error("delete 도중 SQL 예외 발생: ", e);
-			return 1;
 		}
-		return 0;
+		return deleteCnt;
 	}
 
 }
