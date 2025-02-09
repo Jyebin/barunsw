@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
@@ -68,7 +69,9 @@ public class TestPanel extends JPanel {
 	private GridBagLayout gridBagLayout = new GridBagLayout();
 
 	private AddressBookInterface addressBookInterface = new DbAddressImpl();
-
+    private FileAddressBookImpl fileAddressBookImpl = new FileAddressBookImpl();
+    
+    
 	private final int COLUMN_INDEX_NAME = 0;
 	private final int COLUMN_INDEX_AGE = 1;
 	private final int COLUMN_INDEX_GENDER = 2;
@@ -89,9 +92,16 @@ public class TestPanel extends JPanel {
 	}
 
 	private void initreset() {
-		CommonTableModel model = (CommonTableModel) jTable_Result.getModel();
-		model.setNumRows(0);
+	    // jTable의 모델이 CommonTableModel인지 확인한 후, 캐스팅
+	    if (jTable.getModel() instanceof CommonTableModel) {
+	        CommonTableModel model = (CommonTableModel) jTable.getModel();
+	        model.setNumRows(0); // 모델의 행 수를 0으로 설정하여 초기화
+	    } else {
+	        // 만약 jTable의 모델이 CommonTableModel이 아니라면 오류 처리
+	        System.out.println("jTable의 모델이 CommonTableModel이 아닙니다.");
+	    }
 	}
+
 
 	public void initComponent() throws Exception {
 		jPanel_Form.setLayout(new GridBagLayout());
@@ -140,17 +150,24 @@ public class TestPanel extends JPanel {
 	}
 
 	private void initTable() {
-		String[] columns = { "이름", "나이", "성별", "전화번호", "주소" };
+	    // 열 이름 정의
+	    String[] columns = { "이름", "나이", "성별", "전화번호", "주소" };
+	    
+	    // CommonTableModel 초기화 시, 열 정보 전달
+	    CommonTableModel tableModel = new CommonTableModel(new Vector<>(Arrays.asList(columns)));
+	    
+	    // JTable에 CommonTableModel 설정
+	    jTable = new JTable(tableModel);
 
-		DefaultTableModel tableModel = new DefaultTableModel(columns, 100);
-		jTable = new JTable(tableModel);
+	    // JScrollPane에 JTable 설정
+	    scrollPane.setViewportView(jTable);
 
-		scrollPane.setViewportView(jTable);
-
-		jPanel_Table.setLayout(new GridBagLayout());
-		jPanel_Table.add(scrollPane, new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER,
-				GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+	    // Panel에 테이블 추가
+	    jPanel_Table.setLayout(new GridBagLayout());
+	    jPanel_Table.add(scrollPane, new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER,
+	            GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 	}
+
 
 	private void insertData() {
 		try {
@@ -268,8 +285,9 @@ public class TestPanel extends JPanel {
 	}
 
 	void jButton_Add_ActionListener(ActionEvent e) {
-		initreset();
-		insertData();
+		initreset(); //입력 필드 초기화
+		insertData(); //데이터 삽입
+		
 	}
 
 	void jButton_Update_ActionListener(ActionEvent e) {

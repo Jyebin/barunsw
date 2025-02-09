@@ -9,10 +9,9 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import day4.JdbcAddressBookImpl;
 
 public class SqlSessionFactoryManager {
-	private static Logger LOGGER = LoggerFactory.getLogger(JdbcAddressBookImpl.class);
+	private static Logger LOGGER = LoggerFactory.getLogger(SqlSessionFactoryManager.class);
 	private static final SqlSessionFactory sqlSessionFactory;
 
 	static {

@@ -11,14 +11,14 @@
 
 	<insert id="insertAddress" parameterType="AddressVO">
 		INSERT INTO
-		address_book (name, age, phone, address)
+		address (name, age, phone, address)
 		VALUES (#{name}, #{age},
 		#{phone}, #{address})
 	</insert>
 
 
 	<update id="updateAddress" parameterType="AddressVO">
-		UPDATE address_book
+		UPDATE address
 		SET
 		name = #{name}, age = #{age}, phone = #{phone}, address = #{address}
 		WHERE seq = #{seq}

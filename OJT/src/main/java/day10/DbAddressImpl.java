@@ -51,7 +51,7 @@ public class DbAddressImpl implements AddressBookInterface {
 		try (Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
 				Statement stmt = conn.createStatement()) {
 
-			ResultSet resultSet = stmt.executeQuery("SELECT NAME, AGE, GENDER, PHONE, ADDRESS, FROM USER_INFO");
+			ResultSet resultSet = stmt.executeQuery("SELECT NAME, AGE, GENDER, PHONE, ADDRESS FROM USER_INFO");
 
 			while (resultSet.next()) {
 				String name = resultSet.getString("NAME");
