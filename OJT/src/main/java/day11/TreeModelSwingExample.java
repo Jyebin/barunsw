@@ -9,7 +9,7 @@ public class TreeModelSwingExample {
 		SwingUtilities.invokeLater(() -> {
 			JFrame frame = new JFrame("Tree Model Example");
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			frame.setSize(400, 300); // 프레임 크기를 설정합니다.
+			frame.setSize(400, 300);
 
 			MyTreeNode rootNode = new MyTreeNode("Root");
 			MyTreeNode childNode1 = new MyTreeNode("Child 1");
@@ -21,6 +21,7 @@ public class TreeModelSwingExample {
 			MyTreeModel treeModel = new MyTreeModel(rootNode);
 
 			JTree tree = new JTree(treeModel);
+			tree.setRootVisible(false); //루트 노드를 숨김
 			JScrollPane scrollPane = new JScrollPane(tree);
 
 			frame.add(scrollPane, BorderLayout.CENTER);
