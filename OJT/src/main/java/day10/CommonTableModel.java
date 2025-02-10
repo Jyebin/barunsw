@@ -5,7 +5,7 @@ import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
-public class CommonTableModel extends DefaultTableModel {
+public class CommonTableModel extends AbstractTableModel {
 	protected Vector columnInfo; // 열 정보
 	protected Vector dataInfo; // 데이터 정보
 	protected Vector cellEditableInfo = new Vector();

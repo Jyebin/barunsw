@@ -32,9 +32,9 @@ import javax.swing.ButtonGroup;
 
 public class TestPanel extends JPanel {
 	private static final Logger LOGGER = LoggerFactory.getLogger(TestPanel.class);
-	
-	//칼럼 인덱스를 상수 정의 해주기
-	//private final int TABLE_CELL_ID_NAME = 1;
+
+	// 칼럼 인덱스를 상수 정의 해주기
+	// private final int TABLE_CELL_ID_NAME = 1;
 
 	private int selectedRow = 0;
 	private final Dimension LABEL_SIZE = new Dimension(80, 30);
@@ -68,18 +68,21 @@ public class TestPanel extends JPanel {
 
 	private JButton jButton_Add = new JButton("추가");
 	private JButton jButton_Update = new JButton("변경");
+	private JButton jButton_Save = new JButton("저장");
 
 	private JPopupMenu jPopupMenu = new JPopupMenu();
 	private JMenuItem jMenuItem_Delete = new JMenuItem("삭제");
 
-	private AddressBookInterface addressBookInterface = new DbAddressBookImplement();
+	private AddressBookInterface addressBookInterface = new DbAddressImpl();
+
 	public TestPanel() {
 		try {
 			initComponent();
 			initTable();
 			initreset();
 			initData();
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			LOGGER.error(ex.getMessage(), ex);
 		}
 	}
@@ -107,6 +110,7 @@ public class TestPanel extends JPanel {
 
 		jButton_Add.setPreferredSize(SIZE);
 		jButton_Update.setPreferredSize(SIZE);
+		jButton_Add.setPreferredSize(SIZE);
 
 		this.add(jLabel_Name, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0));
@@ -161,6 +165,9 @@ public class TestPanel extends JPanel {
 		jPanel_Button.add(jButton_Update, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 
+		jPanel_Button.add(jButton_Add, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+				GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+
 		jButton_Add.addActionListener(new TestPanel_jButton_Add_ActionListener(this));
 
 		jButton_Update.addActionListener(new TestPanel_jButton_Update_ActionListener(this));
@@ -191,11 +198,11 @@ public class TestPanel extends JPanel {
 
 	private void initData() {
 
-		List<AddressVO> personList = addressBookInterface.selectAddressList(new AddressVO());
+		List<AddressVo> personList = addressBookInterface.selectAddressList(new AddressVo());
 
 		Vector dataLine = new Vector<>();
 
-		for (AddressVO onePerson : personList) {
+		for (AddressVo onePerson : personList) {
 			LOGGER.info("person : " + onePerson);
 			Vector data = new Vector();
 			data.add(onePerson.getName());
@@ -215,7 +222,7 @@ public class TestPanel extends JPanel {
 
 	private void insertData() {
 		try {
-			AddressVO onePerson = new AddressVO();
+			AddressVo onePerson = new AddressVo();
 			int age = (Integer) jSpinner_Age.getValue();
 
 			onePerson.setName(jTextField_Name.getText());
@@ -238,15 +245,16 @@ public class TestPanel extends JPanel {
 
 			initreset();
 			initData();
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			LOGGER.error(ex.getMessage(), ex);
 		}
 	}
 
 	private void updateData() {
-		List<AddressVO> personList = addressBookInterface.selectAddressList(new AddressVO());
+		List<AddressVo> personList = addressBookInterface.selectAddressList(new AddressVo());
 		try {
-			AddressVO onePerson = new AddressVO();
+			AddressVo onePerson = new AddressVo();
 			int selectedRow = jTable_Result.getSelectedRow();
 
 			int age = (Integer) jSpinner_Age.getValue();
@@ -269,18 +277,20 @@ public class TestPanel extends JPanel {
 			onePerson.setAddress(jTextField_Address.getText());
 
 			Object value = tableModel.getValueAt(selectedRow, 5);
-			if (value instanceof AddressVO) {
+			if (value instanceof AddressVo) {
 				try {
-					AddressVO addressVo = (AddressVO) value;
+					AddressVo addressVo = (AddressVo) value;
 					addressBookInterface.updateAddress(addressVo);
-				} catch (Exception ex) {
+				}
+				catch (Exception ex) {
 					LOGGER.error(ex.getMessage(), ex);
 				}
 			}
 
 			addressBookInterface.updateAddress(onePerson);
 			initData();
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			LOGGER.error(ex.getMessage(), ex);
 		}
 	}
@@ -294,11 +304,12 @@ public class TestPanel extends JPanel {
 	private void deleteData() {
 		Object value = tableModel.getValueAt(selectedRow, 5);
 
-		if (value instanceof AddressVO) {
+		if (value instanceof AddressVo) {
 			try {
-				AddressVO addressVo = (AddressVO) value;
+				AddressVo addressVo = (AddressVo) value;
 				addressBookInterface.deleteAddress(addressVo);
-			} catch (Exception ex) {
+			}
+			catch (Exception ex) {
 				LOGGER.error(ex.getMessage(), ex);
 			}
 			initreset();
@@ -316,9 +327,9 @@ public class TestPanel extends JPanel {
 	}
 
 	void jTable_Result_MouseListener(MouseEvent e) {
-		List<AddressVO> personList = addressBookInterface.selectAddressList(new AddressVO());
+		List<AddressVo> personList = addressBookInterface.selectAddressList(new AddressVo());
 		try {
-			AddressVO onePerson = new AddressVO();
+			AddressVo onePerson = new AddressVo();
 
 			selectedRow = jTable_Result.getSelectedRow();
 
@@ -335,16 +346,16 @@ public class TestPanel extends JPanel {
 			jTextField_Address.setText(onePerson.getAddress());
 
 			if (e.getModifiersEx() != MouseEvent.BUTTON1_DOWN_MASK) {
-				
+
 			}
-					
-			
+
 			if (e.getButton() == 3) { // 오른쪽 마우스 눌렀을 때만
 				selectedRow = jTable_Result.getSelectedRow();
 				initPopupMenu();
 				jPopupMenu.show(TestPanel.this.jTable_Result, e.getX(), e.getY());
 			}
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			LOGGER.error(ex.getMessage(), ex);
 		}
 	}
@@ -380,6 +391,21 @@ class TestPanel_jButton_Update_ActionListener implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		adaptee.jButton_Update_ActionListener(e);
+	}
+}
+
+class TestPanel_jButton_Add_ActionListener implements ActionListener {
+	private TestPanel adaptee;
+
+	public TestPanel_jButton_Add_ActionListener(TestPanel adaptee) {
+		this.adaptee = adaptee;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		FileAddressBookImpl fileAddressBook = adaptee.getFileAddressBook();
+		fileAddressBook.saveAddressListToFile();
+
 	}
 }
 

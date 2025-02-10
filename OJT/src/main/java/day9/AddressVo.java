@@ -2,7 +2,7 @@ package day9;
 
 import java.io.Serializable;
 
-public class AddressVO implements Serializable {
+public class AddressVo implements Serializable {
 	private int seq;
 	private String name;
 	private int age;
@@ -10,7 +10,7 @@ public class AddressVO implements Serializable {
 	private String address;
 	private Gender gender;
 
-	public AddressVO() {
+	public AddressVo() {
 
 	}
 

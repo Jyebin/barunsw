@@ -1,7 +1,11 @@
 package day11;
 
 import javax.swing.*;
+import javax.swing.tree.TreePath;
+
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class TreeModelSwingExample {
 	public static void main(String[] args) {
@@ -21,10 +25,34 @@ public class TreeModelSwingExample {
 			MyTreeModel treeModel = new MyTreeModel(rootNode);
 
 			JTree tree = new JTree(treeModel);
-			tree.setRootVisible(false); //루트 노드를 숨김
+			tree.setRootVisible(false); // 루트 노드를 숨김
 			JScrollPane scrollPane = new JScrollPane(tree);
 
+			JPanel searchPanel = new JPanel();
+			JTextField searchField = new JTextField(15);
+			JButton searchButton = new JButton("Search");
+
+			searchButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					String searchValue = searchField.getText();
+					MyTreeNode foundNode = treeModel.searchNode(searchValue);
+					if (foundNode != null) {
+						TreePath path = new TreePath(foundNode);
+						tree.setSelectionPath(path);
+						tree.scrollPathToVisible(path);
+						JOptionPane.showMessageDialog(frame, "Found: " + foundNode.getValue());
+					} else {
+						JOptionPane.showMessageDialog(frame, "Node not found.");
+					}
+				}
+			});
+
+			searchPanel.add(searchField);
+			searchPanel.add(searchButton);
+
 			frame.add(scrollPane, BorderLayout.CENTER);
+			frame.add(searchPanel, BorderLayout.SOUTH);
 			frame.setVisible(true);
 		});
 	}

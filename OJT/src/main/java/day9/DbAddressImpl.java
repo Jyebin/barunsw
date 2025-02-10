@@ -14,15 +14,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class DbAddressBookImplement implements AddressBookInterface {
-	private static final Logger LOGGER = LoggerFactory.getLogger(DbAddressBookImplement.class);
+public class DbAddressImpl implements AddressBookInterface {
+	private static final Logger LOGGER = LoggerFactory.getLogger(DbAddressImpl.class);
 
 	private static String DB_URL;
 	private static String USERNAME;
 	private static String PASSWORD;
 	static {
 		Properties properties = new Properties();
-		try (InputStream input = DbAddressBookImplement.class.getClassLoader().getResourceAsStream("jdbc.properties")) {
+		try (InputStream input = DbAddressImpl.class.getClassLoader().getResourceAsStream("jdbc.properties")) {
 			properties.load(input);
 
 			DB_URL = properties.getProperty("URL");
@@ -35,7 +35,7 @@ public class DbAddressBookImplement implements AddressBookInterface {
 		}
 	}
 
-	public DbAddressBookImplement() {
+	public DbAddressImpl() {
 		try {
 			Class.forName("org.mariadb.jdbc.Driver");
 		}
@@ -45,12 +45,12 @@ public class DbAddressBookImplement implements AddressBookInterface {
 	}
 
 	@Override
-	public List<AddressVO> selectAddressList(AddressVO person) {
-		List<AddressVO> personList = new ArrayList<>();
+	public List<AddressVo> selectAddressList(AddressVo person) {
+		List<AddressVo> personList = new ArrayList<>();
 		try (Connection connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
 				Statement statement = connection.createStatement()) {
 
-			ResultSet resultSet1 = statement.executeQuery("SELECT * FROM ADDRESS_BOOK");
+			ResultSet resultSet1 = statement.executeQuery("SELECT * FROM USER_INFO");
 
 			while (resultSet1.next()) {
 				String seq = resultSet1.getString(1); // seq는 사용하지 않으므로 필요에 따라 제거 가능
@@ -60,7 +60,7 @@ public class DbAddressBookImplement implements AddressBookInterface {
 				String address = resultSet1.getString(5);
 				String genderStr = resultSet1.getString(6);
 
-				AddressVO personInfo = new AddressVO();
+				AddressVo personInfo = new AddressVo();
 
 				personInfo.setName(name);
 				personInfo.setAge(Integer.parseInt(age));
@@ -82,8 +82,8 @@ public class DbAddressBookImplement implements AddressBookInterface {
 
 	// 주소록 데이터 업데이트 - 변경 버튼 클릭
 	@Override
-	public int updateAddress(AddressVO person) throws Exception {
-		String sql = "UPDATE ADDRESS_BOOK SET AGE=?, PHONE=?, ADDRESS=? WHERE NAME=?";
+	public int updateAddress(AddressVo person) throws Exception {
+		String sql = "UPDATE USER_INFO SET AGE=?, PHONE=?, ADDRESS=? WHERE NAME=?";
 
 		try (Connection connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
 				PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -109,10 +109,10 @@ public class DbAddressBookImplement implements AddressBookInterface {
 	}
 
 	@Override
-	public int insertAddress(AddressVO person) throws Exception {
+	public int insertAddress(AddressVo person) throws Exception {
 
 		String preparedSql = String
-				.format("INSERT INTO ADDRESS_BOOK(NAME, AGE,  PHONE, ADDRESS, GENDER) " + "VALUES (?, ?, ?, ?,?)");
+				.format("INSERT INTO USER_INFO(NAME, AGE,  PHONE, ADDRESS, GENDER) " + "VALUES (?, ?, ?, ?,?)");
 
 		try (Connection connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
 				PreparedStatement preparedStatement = connection.prepareStatement(preparedSql);) {
@@ -130,9 +130,9 @@ public class DbAddressBookImplement implements AddressBookInterface {
 	}
 
 	@Override
-	public int deleteAddress(AddressVO person) throws Exception {
-		String sql = "DELETE FROM ADDRESS_BOOK WHERE NAME=?";
-		List<AddressVO> personList = selectAddressList(person);
+	public int deleteAddress(AddressVo person) throws Exception {
+		String sql = "DELETE FROM USER_INFO WHERE NAME=?";
+		List<AddressVo> personList = selectAddressList(person);
 
 		try (Connection connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
 				PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -141,7 +141,7 @@ public class DbAddressBookImplement implements AddressBookInterface {
 			int deleteIndex = -1;
 
 			for (int i = 0; i < addressBookCount; i++) {
-				AddressVO oneAddress = personList.get(i);
+				AddressVo oneAddress = personList.get(i);
 				if (oneAddress != null && oneAddress.getName().equals(person.getName())) {
 					deleteIndex = i;
 					break;

@@ -66,4 +66,26 @@ class MyTreeModel implements TreeModel {
 	public void valueForPathChanged(TreePath path, Object newValue) { // 노드의 값이 변경되었을 때 호출되는 메소드
 		System.out.println("Value changed for path: " + path + " to new value: " + newValue);
 	}
+
+	public MyTreeNode searchNode(String value) {
+		return searchNodeRecursive(root, value);
+	}
+
+	private MyTreeNode searchNodeRecursive(MyTreeNode node, String value) {
+		if (node.getValue().equals(value)) {
+			return node; // 값이 일치하면 노드 반환
+		}
+		for (MyTreeNode child : node.getChildren()) {
+			MyTreeNode result = searchNodeRecursive(child, value);
+			if (result != null) {
+				return result; // 자식 노드에서 일치하는 노드를 찾으면 반환
+			}
+		}
+		return null; // 일치하는 노드가 없으면 null 반환
+	}
+
+	@Override
+	public String toString() {
+		return root.toString();
+	}
 }
